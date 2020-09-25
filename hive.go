@@ -14,10 +14,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/beltran/gohive/hiveserver"
 	"github.com/beltran/gosasl"
 	"github.com/go-zookeeper/zk"
 	"github.com/prajain/thrift/lib/go/thrift"
+	"github.com/stntngo/gohive/hiveserver"
 )
 
 const DEFAULT_FETCH_SIZE int64 = 1000
