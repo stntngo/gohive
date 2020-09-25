@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/apache/thrift/lib/go/thrift"
 	"github.com/beltran/gosasl"
+	"github.com/prajain/thrift/lib/go/thrift"
 )
 
 const (
