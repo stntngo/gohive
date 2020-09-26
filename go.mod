@@ -3,7 +3,7 @@ module github.com/stntngo/gohive
 go 1.14
 
 require (
-	github.com/beltran/gosasl v0.0.0-20200715011608-d5475aebb293
 	github.com/go-zookeeper/zk v1.0.1
 	github.com/prajain/thrift v0.12.0
+	github.com/stntngo/gosasl v0.0.0-20200926152549-ce864e62f9f9
 )
