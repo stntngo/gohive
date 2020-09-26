@@ -18,6 +18,8 @@ import (
 	"github.com/prajain/thrift/lib/go/thrift"
 	"github.com/stntngo/gohive/hiveserver"
 	"github.com/stntngo/gosasl"
+
+	"go.uber.org/multierr"
 )
 
 const DEFAULT_FETCH_SIZE int64 = 1000
@@ -92,6 +94,8 @@ func ConnectZookeeper(hosts string, auth string,
 		rand.Shuffle(len(nodes), func(i, j int) {
 			nodes[i], nodes[j] = nodes[j], nodes[i]
 		})
+
+		var cerr error
 		for _, node := range nodes {
 			port, err := strconv.Atoi(node["port"])
 			if err != nil {
@@ -99,18 +103,26 @@ func ConnectZookeeper(hosts string, auth string,
 			}
 			conn, err := innerConnect(node["host"], port, auth, configuration)
 			if err != nil {
+				cerr = multierr.Append(cerr, err)
 				// Let's try to connect to the next one
 				continue
 			}
+
 			return conn, nil
 		}
-		return nil, fmt.Errorf("all Hive servers of the specified Zookeeper namespace %s are unavailable",
-			configuration.ZookeeperNamespace)
-	} else {
-		return nil, fmt.Errorf("no Hive server is registered in the specified Zookeeper namespace %s",
-			configuration.ZookeeperNamespace)
+
+		return nil, fmt.Errorf(
+			"all Hive servers of the specified Zookeeper namespace %s are unavailable: %w",
+			configuration.ZookeeperNamespace,
+			cerr,
+		)
+
 	}
 
+	return nil, fmt.Errorf(
+		"no Hive server is registered in the specified Zookeeper namespace %s",
+		configuration.ZookeeperNamespace,
+	)
 }
 
 // Connect to hive server
